@@ -25,6 +25,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               });
             });
+
+            const backButton = document.getElementById('back-button');
+            if (backButton) {
+              backButton.addEventListener('click', () => {
+                contentDiv.innerHTML = `
+                  <h1>Enter Name</h1>
+                  <input type="text" id="name-input" placeholder="Enter name">
+                  <button id="search-button">Search</button>
+                `;
+                // Reattach the event listener for the search button
+                document.getElementById('search-button').addEventListener('click', () => {
+                  const name = document.getElementById('name-input').value;
+                  if (name) {
+                    fetch('search.html')
+                      .then(response => response.text())
+                      .then(html => {
+                        contentDiv.innerHTML = html;
+                        document.getElementById('user-name').innerText = name;
+                      });
+                  }
+                });
+              });
+            }
           })
           .catch(error => {
             console.error('Error loading search.html:', error);
