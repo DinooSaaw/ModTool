@@ -5,6 +5,8 @@ function createMainWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    title: 'The Brightest Candle Mod Tool',
+    icon: path.join(__dirname, 'assets', 'icon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -20,7 +22,8 @@ function createMainWindow() {
     const searchWindow = new BrowserWindow({
       width: 600,
       height: 400,
-      title: 'The Brighest Candle Mod Tool',
+      title: 'The Brightest Candle Mod Tool',
+      icon: path.join(__dirname, 'assets', 'icon.ico'),
       webPreferences: {
         preload: path.join(__dirname, 'preload.js')
       }
