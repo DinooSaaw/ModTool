@@ -5,33 +5,31 @@
     <link rel="stylesheet" href="./css/search.css" />
   </head>
   <body>
-    <script>
-      const getAvatar = () => {
-        fetch(`https://decapi.me/twitch/avatar/${username}`)
-          .then((response) => response.text())
-          .then((data) => {
-            avatarSrc = data;
-          });
-      };
-    </script>
     <div class="user-info">
       <div>
-        <h1>User Actions for <span id="user-name" class="username"></span></h1>
+        <h1>User Actions for <span id="user-name" class="username"></span> (<span id="user-id"></span>)</h1>
       </div>
       <div>
-        <div class="avatar"><img id="avatar-img" src=getAvatar(username) /></div>
+        <div class="avatar"><img id="avatar-img" src="https://static-cdn.jtvnw.net/jtv_user_pictures/7c6a6a99-a8f6-4f7f-be8d-aedc7e289f95-profile_image-300x300.png" /></div>
       </div>
+    </div>
+
+    <div class="actions-buttons">
+      <button id="back"><img src="./assets/back.png" alt="Back" width="20" height="20"></button>
+      <button id="native-user-card"><img src="./assets/twitch.png" alt="Open Native User Card" width="20" height="20"></button>
     </div>
 
     <div class="roles">
       <h2>Roles</h2>
-      <button id="add-vip">Add VIP</button>
-      <button id="add-mod">Add Mod</button>
+      <div class="roles-buttons">
+        <button id="add-vip" class="roles-button">Grant VIP <img src="./assets/vip.png" alt="VIP Badge" width="20" height="20"></button>
+        <button id="add-mod" class="roles-button">Grant Mod <img src="./assets/mod.png" alt="Mod Badge" width="20" height="20"></button>
+      </div>
     </div>
 
     <div class="moderation">
       <h2>Moderation</h2>
-      <button id="ban" style="margin-bottom: 10px">Ban</button>
+      <button id="ban" style="margin-bottom: 10px">Ban <img src="./assets/ban.png" alt="Gavel" width="20" height="20"></button>
       <br />
       <button class="timeout-btn" data-time="1">1s</button>
       <button class="timeout-btn" data-time="30">30s</button>

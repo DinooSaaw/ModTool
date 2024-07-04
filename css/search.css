@@ -1,71 +1,122 @@
 body {
-    background-color: #333;
-    font-family: Arial, sans-serif;
-    color: white;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  h1 {
-    margin-bottom: 20px;
-  }
-  
-  button {
-    padding: 8px 12px;
-    background-color: #db7c34;
-    color: black;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #fd8d37;
-  }
-  
-  #timeout-section {
-    margin-top: 20px;
-  }
-  
-  .username {
-    color: rgba(42, 214, 23, 0.807);
-  }
+  background-color: #333;
+  font-family: Arial, sans-serif;
+  color: white;
+  height: 100vh;
+  margin: 0;
+}
 
-  .user-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .user-info h1 {
-    font-size: 24px;
-    margin: 0;
-  }
-  .avatar img {
-    margin-top: 10px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-  .roles {
-    margin-top: 20px;
-  }
-  .moderation {
-    margin-top: 20px;
-  }
-  .actions {
-    margin-top: 20px;
-  }
+h1 {
+  margin-bottom: 10px;
+}
 
-  input[type=number] {
-    border: 2px solid black;
-    border-radius: 4px;
-    background-color: #33333350;
-    color: white;
-  }
+button {
+  padding: 8px 12px;
+  background-color: #db7c34;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
 
-  input[type=number]:focus {
-    border: 2px solid rgba(0, 0, 0, 0);
-    border-radius: 4px;
-  }
+button:hover {
+  background-color: #fd8d37;
+}
+
+.actions-buttons button {
+  padding: 4px 6px;
+  background-color: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.0s;
+}
+
+.actions-buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 30px;
+}
+
+#timeout-section {
+  margin-top: 20px;
+}
+
+.username {
+  color: rgba(42, 214, 23, 0.807);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.user-info h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.avatar img {
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+}
+
+.avatar img:hover {
+  box-shadow: 0 0 10px gold;
+}
+
+.roles {
+  margin-top: 20px;
+}
+
+.roles-buttons {
+  display: flex;
+  gap: 10px; /* Adjust the gap between buttons as needed */
+}
+
+.roles-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roles-button img {
+  margin-left: 5px;
+}
+
+.moderation {
+  margin-top: 20px;
+}
+
+input[type="number"] {
+  border: 2px solid black;
+  border-radius: 4px;
+  background-color: #33333350;
+  color: white;
+}
+
+input[type="number"]:focus {
+  border: 2px solid rgba(0, 0, 0, 0);
+  border-radius: 4px;
+}
+
+#ban {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ban img {
+  margin-left: 5px;
+}
+
+.moderation button:hover {
+  color: black;
+  background-color: red;
+  font-weight: bold;
+}
+
