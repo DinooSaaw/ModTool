@@ -1,24 +1,51 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>User Actions</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <button id="back-button">Back</button>
-  <h1 id="user-name"></h1>
-  <button id="add-vip">Add As VIP</button>
-  <button id="add-mod">Add As Mod</button>
-  <button id="ban">Ban</button>
-  <div id="timeout-section">
-    <h2>Timeout</h2>
-    <button class="timeout-btn" data-time="1">1s</button>
-    <button class="timeout-btn" data-time="30">30s</button>
-    <button class="timeout-btn" data-time="60">60s</button>
-    <button class="timeout-btn" data-time="300">300s</button>
-    <input type="text" id="custom-time" placeholder="Custom time in seconds">
-    <button id="timeout-custom">Timeout</button>
-  </div>
-  <script src="renderer.js"></script>
-</body>
+  <head>
+    <title>User Actions</title>
+    <link rel="stylesheet" href="./css/search.css" />
+  </head>
+  <body>
+    <script>
+      const getAvatar = () => {
+        fetch(`https://decapi.me/twitch/avatar/${username}`)
+          .then((response) => response.text())
+          .then((data) => {
+            avatarSrc = data;
+          });
+      };
+    </script>
+    <div class="user-info">
+      <div>
+        <h1>User Actions for <span id="user-name" class="username"></span></h1>
+      </div>
+      <div>
+        <div class="avatar"><img id="avatar-img" src=getAvatar(username) /></div>
+      </div>
+    </div>
+
+    <div class="roles">
+      <h2>Roles</h2>
+      <button id="add-vip">Add VIP</button>
+      <button id="add-mod">Add Mod</button>
+    </div>
+
+    <div class="moderation">
+      <h2>Moderation</h2>
+      <button id="ban" style="margin-bottom: 10px">Ban</button>
+      <br />
+      <button class="timeout-btn" data-time="1">1s</button>
+      <button class="timeout-btn" data-time="30">30s</button>
+      <button class="timeout-btn" data-time="60">60s</button>
+      <button class="timeout-btn" data-time="300">300s</button>
+      <input
+        type="number"
+        id="custom-time"
+        max="10"
+        placeholder="Custom time in seconds"
+      />
+      <button id="timeout-custom">Timeout</button>
+    </div>
+
+    <script src="renderer.js"></script>
+  </body>
 </html>
