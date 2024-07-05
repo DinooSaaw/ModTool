@@ -15,8 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const id = await idResponse.text();
             const color = await fetchChatColor(id)
             
-            const response = await fetch('search.html');
-            const html = await response.text();
+            let html = sessionStorage.getItem('searchHtml');
+            if (!html) {
+              const response = await fetch('search.html');
+              html = await response.text();
+              sessionStorage.setItem('searchHtml', html);
+            }
             
             contentDiv.innerHTML = html;
             document.getElementById('user-name').innerText = name;

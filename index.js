@@ -8,17 +8,24 @@ function createMainWindow() {
     title: 'The Brightest Candle Mod Tool',
     icon: path.join(__dirname, 'assets', 'icon.ico'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      enableRemoteModule: false
     }
   });
 
   mainWindow.loadFile('index.html');
 
   // Remove the default menu
-  const customMenu = Menu.buildFromTemplate([]);
-  Menu.setApplicationMenu(customMenu);
+  // const customMenu = Menu.buildFromTemplate([]);
+  // Menu.setApplicationMenu(customMenu);
 
   ipcMain.on('search-name', (event, name) => {
+    if (typeof name !== 'string') {
+      console.error('Invalid input for name');
+      return;
+    }
+
     const searchWindow = new BrowserWindow({
       width: 600,
       height: 400,
@@ -35,7 +42,7 @@ function createMainWindow() {
   });
 }
 
-app.whenReady().then(createMainWindow);
+app.on('ready', createMainWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
