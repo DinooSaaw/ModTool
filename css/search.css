@@ -11,6 +11,7 @@ h1 {
 }
 
 button {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 8px 12px;
   background-color: #db7c34;
   color: black;
@@ -22,12 +23,14 @@ button {
 
 button:hover {
   background-color: #fd8d37;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4), 0 6px 20px 0 rgba(0, 0, 0, 0.38);
 }
 
 .actions-buttons button {
   padding: 4px 6px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   background-color: transparent;
-  border-radius: 4px;
+  border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.0s;
 }
@@ -78,13 +81,13 @@ button:hover {
   gap: 10px; /* Adjust the gap between buttons as needed */
 }
 
-.roles-button {
+.roles-btn {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.roles-button img {
+.roles-btn img {
   margin-left: 5px;
 }
 
@@ -117,6 +120,16 @@ input[type="number"]:focus {
 .moderation button:hover {
   color: black;
   background-color: red;
+  box-shadow: 0 4px 8px 0 rgba(150, 18, 18, 0.4), 0 6px 20px 0 rgba(150, 18, 18, 0.38);
   font-weight: bold;
 }
 
+button:disabled {
+  background-color: #5b5a5a7d;
+  cursor: default;
+}
+
+button:disabled:hover {
+  background-color: #5b5a5a7d;
+  font-weight: unset;
+}

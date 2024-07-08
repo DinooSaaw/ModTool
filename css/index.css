@@ -23,26 +23,40 @@ button {
   transition: background-color 0.3s;
 }
 
-input {
-    padding: 8px 12px;
-    margin-right: 10px;
-}
-
 button:hover {
   background-color: #fd8d37;
 }
 
 input[type=text] {
-    border: none;
-    border-bottom: 2px solid orange;
-    background-color: #05030350;
-    background-image: url('../assets/searchicon.png');
-    background-position: 10px;
-    background-repeat: no-repeat;
-    padding-left: 40px;
-    color: beige;
-  }
+  padding: 8px 12px;
+  margin-right: 10px;
+  border: none;
+  border-bottom: 2px solid orange;
+  background-color: #05030350;
+  background-image: url('../assets/searchicon.png');
+  background-position: 10px;
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  color: beige;
+}
 
 input:focus {
-    border: none;
+  outline: none;
 }
+
+/* Dropdown styling */
+#user-dropdown {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 8px;
+  background-color: #070000b9;
+  color: beige;
+  border: none;
+  border-bottom: 2px solid orange;
+}
+
+#user-dropdown:hover {
+  cursor: pointer;
+}
+

@@ -1,50 +1,65 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>User Actions</title>
-    <link rel="stylesheet" href="./css/search.css" />
-  </head>
-  <body>
-    <div class="user-info">
-      <div>
-        <h1>User Actions for <span id="user-name" class="username"></span> (<span id="user-id"></span>)</h1>
-      </div>
-      <div>
-        <div class="avatar"><img id="avatar-img" src="https://static-cdn.jtvnw.net/jtv_user_pictures/7c6a6a99-a8f6-4f7f-be8d-aedc7e289f95-profile_image-300x300.png" /></div>
-      </div>
+<head>
+  <title>User Actions</title>
+  <link rel="stylesheet" href="./css/search.css" />
+</head>
+<body>
+  <div class="user-info">
+    <div>
+      <h1>User Actions for <span id="user-name" class="username"></span> (<button id="id-btn" style="box-shadow: 0 0 0 0; background: none!important; font-size: 24px;   padding: 0!important; color: white; font-family: Arial, sans-serif;"><span id="user-id"></span></button>)</h1>
     </div>
-
-    <div class="actions-buttons">
-      <button id="back"><img src="./assets/back.png" alt="Back" width="20" height="20"></button>
-      <button id="native-user-card"><img src="./assets/twitch.png" alt="Open Native User Card" width="20" height="20"></button>
-      <button id="shoutout"><img src="./assets/shoutout.png" alt="Shoutout User" width="20" height="20"></button>
+    <div>
+      <div class="avatar"><img id="avatar-img" src="" /></div>
     </div>
+  </div>
 
-    <div class="roles">
-      <h2>Roles</h2>
-      <div class="roles-buttons">
-        <button id="add-vip" class="roles-button">Grant VIP <img src="./assets/vip.png" alt="VIP Badge" width="20" height="20"></button>
-        <button id="add-mod" class="roles-button">Grant Mod <img src="./assets/mod.png" alt="Mod Badge" width="20" height="20"></button>
-      </div>
+  <div class="actions-buttons">
+    <button id="back"><img src="./assets/back.png" alt="Back" width="20" height="20"></button>
+    <button id="refresh"><img src="./assets/refresh.png" alt="Back" width="20" height="20"></button>
+    <button id="native-user-card"><img src="./assets/twitch.png" alt="Open Native User Card" width="20" height="20"></button>
+    <button id="shoutout" class="shoutout-btn"><img src="./assets/shoutout.png" alt="Shoutout User" width="20" height="20"></button>
+  </div>
+
+  <div class="roles">
+    <h2>Roles</h2>
+    <div class="roles-buttons">
+      <button id="add-vip" class="roles-btn">Grant VIP <img src="./assets/vip.png" alt="VIP Badge" width="20" height="20"></button>
+      <button id="add-mod" class="roles-btn">Grant Mod <img src="./assets/mod.png" alt="Mod Badge" width="20" height="20"></button>
     </div>
+  </div>
 
-    <div class="moderation">
-      <h2>Moderation</h2>
-      <button id="ban" style="margin-bottom: 10px">Ban <img src="./assets/ban.png" alt="Gavel" width="20" height="20"></button>
-      <br />
-      <button class="timeout-btn" data-time="1">1s</button>
-      <button class="timeout-btn" data-time="30">30s</button>
-      <button class="timeout-btn" data-time="60">60s</button>
-      <button class="timeout-btn" data-time="300">300s</button>
-      <input
-        type="number"
-        id="custom-time"
-        max="10"
-        placeholder="Custom time in seconds"
-      />
-      <button id="timeout-custom">Timeout</button>
-    </div>
+  <div class="moderation">
+    <h2>Moderation</h2>
+    <button id="ban" style="margin-bottom: 10px">Ban <img src="./assets/ban.png" alt="Gavel" width="20" height="20"></button>
+    <p id="ban-text"></p>
+    <br />
+    <button class="timeout-btn" data-time="1">1s</button>
+    <button class="timeout-btn" data-time="30">30s</button>
+    <button class="timeout-btn" data-time="60">60s</button>
+    <button class="timeout-btn" data-time="300">300s</button>
+    <input
+      type="number"
+      id="custom-time"
+      max="10"
+      min="1"
+      placeholder="Custom time in seconds"
+    />
+    <button id="timeout-custom">Timeout</button>
+  </div>
 
-    <script src="renderer.js"></script>
-  </body>
+  <script src="renderer.js"></script>
+  <script>
+    function copyUserId() {
+      const userId = document.getElementById("user-id").innerText;
+      navigator.clipboard.writeText(userId)
+        .then(() => {
+          alert(`Copied the user ID: ${userId}`);
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+        });
+    }
+  </script>
+</body>
 </html>
