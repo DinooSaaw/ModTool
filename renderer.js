@@ -1,17 +1,22 @@
-let ClientId = "";
-let token = "";
-let BroadcasterId = "";
+let Token;
+let ClientId;
+let BroadcasterId;
 
 document.addEventListener("DOMContentLoaded", () => {
   const contentDiv = document.getElementById("content");
-
+  window.electron.ipcRenderer.invoke('get-user-data').then((data) => {
+    Token = data.token;
+    ClientId = data.clientId;
+    BroadcasterId = data.broadcasterId;
+  });
+  
   async function fetchChatColor(id) {
     try {
       const response = await fetch(
         `https://api.twitch.tv/helix/chat/color?user_id=${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -35,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `https://api.twitch.tv/helix/moderation/banned?broadcaster_id=${BroadcasterId}&user_id=${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -64,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `https://api.twitch.tv/helix/moderation/moderators?broadcaster_id=${BroadcasterId}&user_id=${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -88,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `https://api.twitch.tv/helix/channels/vips?broadcaster_id=${BroadcasterId}&user_id=${id}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -113,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -136,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -159,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
           },
         }
@@ -183,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
             "Content-Type": "application/json",
           },
@@ -218,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${Token}`,
             "Client-Id": ClientId,
             "Content-Type": "application/json",
           },
@@ -284,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (button.id == "add-mod") {
           console.log(`lol`);
-          console.log("🚀 ~ button.addEventListener ~ isMod:", isMod)
+          console.log("🚀 ~ button.addEventListener ~ isMod:", isMod);
           if (isMod) {
             let removeModResult = await revokeModUser(id);
             if (removeModResult) {
@@ -354,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!html) {
         const response = await fetch("search.html");
         html = await response.text();
-        // sessionStorage.setItem("searchHtml", html);
+        sessionStorage.setItem("searchHtml", html);
       }
 
       contentDiv.innerHTML = html;
@@ -480,11 +485,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function setupSearch() {
     const searchButton = document.getElementById("search-button");
+
     if (searchButton) {
       searchButton.addEventListener("click", async () => {
         const name = document.getElementById("name-input").value;
-        const selectedUser = document.getElementById("user-dropdown").value;
-
         if (name) {
           try {
             const avatarResponse = await fetch(
@@ -498,15 +502,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const id = await idResponse.text();
             const color = await fetchChatColor(id);
             let isBanned = await fetchBanStatus(id);
-            let IsBroadcaster =
-              name.toLowerCase() === selectedUser.toLowerCase();
+            let IsBroadcaster = id === BroadcasterId;
             let isMod = await fetchModStatus(id);
             let isVIP = await fetchVIPStatus(id);
             let html = sessionStorage.getItem("searchHtml");
             if (!html) {
               const response = await fetch("search.html");
               html = await response.text();
-              // sessionStorage.setItem("searchHtml", html);
+              sessionStorage.setItem("searchHtml", html);
             }
 
             contentDiv.innerHTML = html;
