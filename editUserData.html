@@ -1,41 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit User Data</title>
-</head>
-<body>
-  <h1>Edit User Data</h1>
-  <form id="userDataForm">
-    <label for="clientId">ClientId:</label>
-    <input type="text" id="clientId" name="clientId"><br><br>
-    <label for="token">Token:</label>
-    <input type="text" id="token" name="token"><br><br>
-    <label for="broadcasterId">BroadcasterId:</label>
-    <input type="number" id="broadcasterId" name="broadcasterId"><br><br>
-    <button type="submit">Save</button>
-  </form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script>
-    window.onload = () => {
-      window.electron.ipcRenderer.invoke('get-user-data').then((data) => {
-        document.getElementById('clientId').value = data.ClientId;
-        document.getElementById('token').value = data.Token;
-        document.getElementById('broadcasterId').value = data.BroadcasterId;
-      });
+    <link rel="stylesheet" href="./css/index.css" />
+    <title>Edit User Data</title>
+  </head>
+  <body>
+    <h1>Edit User Data</h1>
+    <form id="userDataForm">
+      <label for="token">Token:</label>
+      <input type="text" id="token" name="token" /><br /><br />
+      <label for="clientId">ClientId:</label>
+      <input type="text" id="clientId" name="clientId" /><br /><br />
+      <label for="broadcasterId">BroadcasterId:</label>
+      <input
+        type="number"
+        id="broadcasterId"
+        name="broadcasterId"
+      /><br /><br />
+      <button type="submit">Save</button>
+    </form>
 
-      document.getElementById('userDataForm').addEventListener('submit', (event) => {
-        event.preventDefault();
-        const userData = {
-          ClientId: document.getElementById('clientId').value,
-          Token: document.getElementById('token').value,
-          BroadcasterId: parseInt(document.getElementById('broadcasterId').value, 10)
-        };
-        window.electron.ipcRenderer.send('save-user-data', userData);
-        console.log(userData)
-      });
-    };
-  </script>
-</body>
+    <b><p id="error" style="color: red;"></p></b>
+
+    <script>
+      window.onload = async () => {
+        window.electron.ipcRenderer.invoke("get-user-data").then((data) => {
+          document.getElementById("clientId").value = data.ClientId;
+          document.getElementById("token").value = data.Token;
+          document.getElementById("broadcasterId").value = data.BroadcasterId;
+        });
+
+        document
+          .getElementById("userDataForm")
+          .addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const userData = {
+              ClientId: document.getElementById("clientId").value,
+              Token: document.getElementById("token").value,
+              BroadcasterId: parseInt(
+                document.getElementById("broadcasterId").value,
+                10
+              ),
+            };
+
+            let isValid = await validateData(userData);
+            if (isValid == "token") {
+              document.getElementById("error").textContent =
+                "Valid token is required.";
+              return;
+            }
+            if (isValid == false) {
+              document.getElementById("error").textContent =
+                "Client Id, Token and Broadcastcaster Id must match the token";
+              return;
+            }
+            window.electron.ipcRenderer.send('save-user-data', userData);
+          });
+      };
+
+      async function validateData(userData) {
+        const response = await fetch(`https://id.twitch.tv/oauth2/validate`, {
+          headers: { Authorization: `OAuth ${userData.Token}` },
+        });
+
+        const data = await response.json();
+        if(data.status === 401) {
+          document.getElementById("token").style.borderBottomColor = "red";
+          return "token";
+        } else {
+          document.getElementById("token").style.borderBottomColor = "green";
+        }
+        if (data.client_id !== userData.ClientId) {
+          document.getElementById("clientId").style.borderBottomColor = "red";
+          return false;
+        } else {
+          document.getElementById("clientId").style.borderBottomColor = "green";
+        }
+        if (data.user_id !== userData.BroadcasterId.toString().trim()) {
+          document.getElementById("broadcasterId").style.borderBottomColor = "red";
+          return false;
+        } else {
+          document.getElementById("broadcasterId").style.borderBottomColor = "green";
+        }
+      }
+    </script>
+  </body>
 </html>

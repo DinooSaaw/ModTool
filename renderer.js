@@ -2,14 +2,15 @@ let Token;
 let ClientId;
 let BroadcasterId;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const contentDiv = document.getElementById("content");
-  window.electron.ipcRenderer.invoke('get-user-data').then((data) => {
-    Token = data.token;
-    ClientId = data.clientId;
-    BroadcasterId = data.broadcasterId;
+  await window.electron.ipcRenderer.invoke('get-user-data').then((data) => {
+    Token = data.Token;
+    ClientId = data.ClientId;
+    BroadcasterId = data.BroadcasterId;
   });
   
+  console.log("🚀 ~ Token:", Token)
   async function fetchChatColor(id) {
     try {
       const response = await fetch(

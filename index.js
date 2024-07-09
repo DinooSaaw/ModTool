@@ -26,7 +26,13 @@ function createMainWindow() {
     }
   });
 
-  mainWindow.webContents.openDevTools();
+  mainWindow.on('closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
+
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.loadFile('index.html');
 
@@ -42,10 +48,29 @@ function createMainWindow() {
           }
         },
         {
+          label: 'Toggle Developer Tools',
+          accelerator: 'CmdOrCtrl+Shift+I',
+          click: () => {
+            mainWindow.webContents.toggleDevTools();
+          }
+        },
+        {
+          label: 'Quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click: () => {
+            app.quit();
+          }
+        }
+      ]
+    }, 
+    {
+      label: "Data",
+      submenu: [
+        {
           label: 'Reset User Data',
           click: () => {
             data.set('Token', '');
-            data.set('ClientId', 'xoqw101tcirrskbzn3rpbqt2kdjhu0');
+            data.set('ClientId', '');
             data.set('BroadcasterId', 0);
             mainWindow.webContents.send('reset-data');
           }
@@ -56,13 +81,6 @@ function createMainWindow() {
             createEditUserDataWindow();
           }
         },
-        {
-          label: 'Quit',
-          accelerator: 'CmdOrCtrl+Q',
-          click: () => {
-            app.quit();
-          }
-        }
       ]
     }
   ]);
@@ -108,7 +126,7 @@ function createMainWindow() {
 function createEditUserDataWindow() {
   editWindow = new BrowserWindow({
     width: 400,
-    height: 300,
+    height: 400,
     title: 'Edit User Data',
     icon: path.join(__dirname, 'assets', 'icon.ico'),
     webPreferences: {
@@ -118,8 +136,11 @@ function createEditUserDataWindow() {
     }
   });
 
+  editWindow.setMenu(null);
+
+
   editWindow.loadFile('editUserData.html');
-  editWindow.webContents.openDevTools();
+  // editWindow.webContents.openDevTools();
   editWindow.on('closed', () => {
     editWindow = null;
   });
