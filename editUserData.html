@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit User Data</title>
+</head>
+<body>
+  <h1>Edit User Data</h1>
+  <form id="userDataForm">
+    <label for="clientId">ClientId:</label>
+    <input type="text" id="clientId" name="clientId"><br><br>
+    <label for="token">Token:</label>
+    <input type="text" id="token" name="token"><br><br>
+    <label for="broadcasterId">BroadcasterId:</label>
+    <input type="number" id="broadcasterId" name="broadcasterId"><br><br>
+    <button type="submit">Save</button>
+  </form>
+
+  <script>
+    window.onload = () => {
+      window.electron.ipcRenderer.invoke('get-user-data').then((data) => {
+        document.getElementById('clientId').value = data.ClientId;
+        document.getElementById('token').value = data.Token;
+        document.getElementById('broadcasterId').value = data.BroadcasterId;
+      });
+
+      document.getElementById('userDataForm').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const userData = {
+          ClientId: document.getElementById('clientId').value,
+          Token: document.getElementById('token').value,
+          BroadcasterId: parseInt(document.getElementById('broadcasterId').value, 10)
+        };
+        window.electron.ipcRenderer.send('save-user-data', userData);
+        console.log(userData)
+      });
+    };
+  </script>
+</body>
+</html>
