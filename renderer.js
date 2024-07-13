@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     BroadcasterId = data.BroadcasterId;
   });
   
-  console.log("🚀 ~ Token:", Token)
   async function fetchChatColor(id) {
     try {
       const response = await fetch(
@@ -289,8 +288,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           return console.log(`Added VIP status to ${name}`);
         }
         if (button.id == "add-mod") {
-          console.log(`lol`);
-          console.log("🚀 ~ button.addEventListener ~ isMod:", isMod);
           if (isMod) {
             let removeModResult = await revokeModUser(id);
             if (removeModResult) {
