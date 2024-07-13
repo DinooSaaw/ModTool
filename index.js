@@ -27,11 +27,14 @@ let editWindow;
 async function refreshToken() {
   try {
     let usingRefreshToken = await settings.get("refreshToken");
+    let usingNotifications = await settings.get("notifications");
     if (!usingRefreshToken) {
-      return new Notification({
-        title: "Error Refreshing Token",
-        body: "Using refresh tokens is off by default. Check your settings!",
-      }).show();
+      if (usingNotifications) {
+        return new Notification({
+          title: "Error Refreshing Token",
+          body: "Using refresh tokens is off by default. Check your settings!",
+        }).show();
+      }
     }
 
     let tokenData = await data.getAll();
@@ -59,23 +62,25 @@ async function refreshToken() {
     if (newTokenData.access_token && newTokenData.refresh_token) {
       await data.set("Token", newTokenData.access_token);
       await data.set("RefreshToken", newTokenData.refresh_token);
-      new Notification({
-        title: "Successfully Refreshed The Token",
-        body: `The refresh token has been successfully updated! You may continue using the application`,
-      }).show();
+      if (usingNotifications) {
+        new Notification({
+          title: "Successfully Refreshed The Token",
+          body: `The refresh token has been successfully updated! You may continue using the application`,
+        }).show();
+      }
     } else {
       throw new Error("Failed to refresh token");
     }
   } catch (error) {
     console.error("Error refreshing token:", error);
-    new Notification({
-      title: "Error Refreshing Token",
-      body: `Failed to refresh token: ${error.message}`,
-    }).show();
+    if (usingNotifications) {
+      new Notification({
+        title: "Error Refreshing Token",
+        body: `Failed to refresh token: ${error.message}`,
+      }).show();
+    }
   }
 }
-
-
 
 function createMainWindow() {
   const mainWindow = new BrowserWindow({
@@ -154,7 +159,7 @@ function createMainWindow() {
         {
           label: "Refresh token",
           click: () => {
-            refreshToken()
+            refreshToken();
           },
         },
       ],
@@ -204,7 +209,7 @@ function createMainWindow() {
       mainWindow.reload();
     }
   });
-  
+
   ipcMain.on("save-settings-data", (event, settingsData) => {
     settings.set("refreshToken", settingsData.refreshToken);
     settings.set("darkMode", settingsData.darkMode);
@@ -214,7 +219,6 @@ function createMainWindow() {
       mainWindow.reload();
     }
   });
-  
 }
 
 function createEditUserDataWindow() {

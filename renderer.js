@@ -8,9 +8,11 @@ let notifications;
 document.addEventListener("DOMContentLoaded", async () => {
   let isOnline = navigator.onLine ? true : false;
   if (!isOnline) {
-    new Notification("Error", { body: "This app requires an internet connection to function. Please ensure you are connected to a network."})
+    new Notification("Error", {
+      body: "This app requires an internet connection to function. Please ensure you are connected to a network.",
+    });
     setTimeout(() => {
-      window.close()
+      window.close();
     }, 10000);
   }
   const contentDiv = document.getElementById("content");
