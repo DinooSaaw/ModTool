@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <title>Settings</title>
+  </head>
+  <body class="dark-mode">
+    <h1>Settings</h1>
+    <form id="userDataForm">
+      <label for="refreshToken">Use Refresh Access Token:</label>
+      <select id="refreshToken" name="refreshToken">
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select><br><br>
+      
+      <label for="darkMode">Enable Dark Mode:</label>
+      <select id="darkMode" name="darkMode">
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select><br><br>
+      
+      <label for="notifications">Enable Notifications:</label>
+      <select id="notifications" name="notifications">
+        <option value="true">True</option>
+        <option value="false">False</option>
+      </select><br><br>
+      
+      <button type="submit">Save</button>
+    </form>
+
+    <b><p id="error" style="color: red;"></p></b>
+
+    <script>
+      window.onload = async () => {
+        try {
+          const data = await window.electron.ipcRenderer.invoke("get-settings-data");
+          document.getElementById("refreshToken").value = data.refreshToken ? 'true' : 'false';
+          document.getElementById("darkMode").value = data.darkMode ? 'true' : 'false';
+          document.getElementById("notifications").value = data.notifications ? 'true' : 'false';
+        } catch (error) {
+          document.getElementById("error").innerText = "Failed to load settings.";
+        }
+      };
+
+      document.getElementById('userDataForm').onsubmit = async (event) => {
+        event.preventDefault();
+        const refreshToken = document.getElementById('refreshToken').value === 'true';
+        const darkMode = document.getElementById('darkMode').value === 'true';
+        const notifications = document.getElementById('notifications').value === 'true';
+
+        const settingsData = {
+          refreshToken,
+          darkMode,
+          notifications
+        };
+
+        try {
+          await window.electron.ipcRenderer.send('save-settings-data', settingsData);
+        } catch (error) {
+          document.getElementById("error").innerText = `Failed to save settings. \n ${error}`
+        }
+      };
+    </script>
+  </body>
+</html>

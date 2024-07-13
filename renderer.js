@@ -1,15 +1,45 @@
 let Token;
 let ClientId;
 let BroadcasterId;
+let refreshToken;
+let darkMode;
+let notifications;
 
 document.addEventListener("DOMContentLoaded", async () => {
+  let isOnline = navigator.onLine ? true : false;
+  if (!isOnline) {
+    new Notification("Error", { body: "This app requires an internet connection to function. Please ensure you are connected to a network."})
+    setTimeout(() => {
+      window.close()
+    }, 10000);
+  }
   const contentDiv = document.getElementById("content");
-  await window.electron.ipcRenderer.invoke('get-user-data').then((data) => {
-    Token = data.Token;
-    ClientId = data.ClientId;
-    BroadcasterId = data.BroadcasterId;
-  });
-  
+  updatedVarables();
+
+  async function updatedVarables() {
+    await window.electron.ipcRenderer.invoke("get-user-data").then((data) => {
+      Token = data.Token;
+      ClientId = data.ClientId;
+      BroadcasterId = data.BroadcasterId;
+    });
+
+    await window.electron.ipcRenderer
+      .invoke("get-settings-data")
+      .then((data) => {
+        refreshToken = data.refreshToken;
+        darkMode = data.darkMode;
+        notifications = data.notifications;
+      });
+    let body = document.getElementsByTagName("body");
+    if (darkMode) {
+      body[0].classList.add("dark-mode");
+      body[0].classList.remove("light-mode");
+    } else {
+      body[0].classList.add("light-mode");
+      body[0].classList.remove("dark-mode");
+    }
+  }
+
   async function fetchChatColor(id) {
     try {
       const response = await fetch(
@@ -339,6 +369,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function refreshUserView(name) {
+    updatedVarables();
     console.log(`Refreshing ${name}'s data`);
     const contentDiv = document.getElementById("content");
     try {
@@ -482,6 +513,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function setupSearch() {
+    updatedVarables();
     const searchButton = document.getElementById("search-button");
 
     if (searchButton) {

@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="./css/index.css" />
     <title>Edit User Data</title>
   </head>
-  <body>
+  <body class="dark-mode">
     <h1>Edit User Data</h1>
     <form id="userDataForm">
-      <label for="token">Token:</label>
+      <label for="token">Access Token:</label>
       <input type="text" id="token" name="token" /><br /><br />
+      <label for="refreshToken" class="refreshToken">Refresh Token:</label>
+      <input type="text" id="refreshToken" name="refreshToken" class="refreshToken"/><br class="refreshToken"/><br class="refreshToken"/>
       <label for="clientId">ClientId:</label>
       <input type="text" id="clientId" name="clientId" /><br /><br />
+      <label for="clientSecret" class="clientSecret">Client Secret:</label>
+      <input type="text" id="clientSecret" name="clientSecret" class="clientSecret"/><br class="clientSecret"/><br class="clientSecret"/>
       <label for="broadcasterId">BroadcasterId:</label>
       <input
         type="number"
@@ -26,11 +30,30 @@
     <b><p id="error" style="color: red;"></p></b>
 
     <script>
+      let useRefreshToken = false;
       window.onload = async () => {
+        await window.electron.ipcRenderer.invoke("get-settings-data").then((data) => {
+          useRefreshToken = data.refreshToken;
+        });
+        
+        let RefreshTokenElements = document.getElementsByClassName("refreshToken");
+        let ClientSecretElements = document.getElementsByClassName("clientSecret");
+        
+        if (!useRefreshToken) {
+          Array.from(RefreshTokenElements).forEach((element) => {
+            element.style.display = "none";
+          });
+          Array.from(ClientSecretElements).forEach((element) => {
+            element.style.display = "none";
+          });
+        }
+
         window.electron.ipcRenderer.invoke("get-user-data").then((data) => {
           document.getElementById("clientId").value = data.ClientId;
+          document.getElementById("clientSecret").value = data.clientSecret;
           document.getElementById("token").value = data.Token;
           document.getElementById("broadcasterId").value = data.BroadcasterId;
+          document.getElementById("refreshToken").value = data.RefreshToken;
         });
 
         document
@@ -40,7 +63,9 @@
 
             const userData = {
               ClientId: document.getElementById("clientId").value,
+              clientSecret: document.getElementById("clientSecret").value,
               Token: document.getElementById("token").value,
+              RefreshToken: document.getElementById("refreshToken").value,
               BroadcasterId: parseInt(
                 document.getElementById("broadcasterId").value,
                 10
@@ -48,14 +73,14 @@
             };
 
             let isValid = await validateData(userData);
-            if (isValid == "token") {
+            if (isValid === "token") {
               document.getElementById("error").textContent =
                 "Valid token is required.";
               return;
             }
-            if (isValid == false) {
+            if (!isValid) {
               document.getElementById("error").textContent =
-                "Client Id, Token and Broadcastcaster Id must match the token";
+                "Client Id, Token, and Broadcaster Id must match the token.";
               return;
             }
             window.electron.ipcRenderer.send('save-user-data', userData);
@@ -68,7 +93,7 @@
         });
 
         const data = await response.json();
-        if(data.status === 401) {
+        if (data.status === 401) {
           document.getElementById("token").style.borderBottomColor = "red";
           return "token";
         } else {
@@ -86,7 +111,19 @@
         } else {
           document.getElementById("broadcasterId").style.borderBottomColor = "green";
         }
-      }
+        if (useRefreshToken && userData.RefreshToken === "undefined" || userData.RefreshToken === "") {
+          document.getElementById("refreshToken").style.borderBottomColor = "red";
+          return false;
+        } else {
+          document.getElementById("refreshToken").style.borderBottomColor = "green";
+          return true;
+        }if (useRefreshToken && userData.clientSecret === "undefined" || userData.userData.clientSecret === "") {
+          document.getElementById("clientSecret").style.borderBottomColor = "red";
+          return false;
+        } else {
+          document.getElementById("clientSecret").style.borderBottomColor = "green";
+        }
+        }
     </script>
   </body>
 </html>

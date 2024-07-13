@@ -1,12 +1,19 @@
 body {
-  background-color: #333;
   font-family: Arial, sans-serif;
-  color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100vh;
   margin: 0;
+}
+
+.dark-mode {
+  background-color: #333;
+}
+
+.light-mode {
+  background-color: #abaaaa;
+  color: black;
 }
 
 h1 {
@@ -27,7 +34,7 @@ button:hover {
   background-color: #fd8d37;
 }
 
-input {
+input, select {
   padding: 8px 12px;
   margin-right: 10px;
   border: none;
